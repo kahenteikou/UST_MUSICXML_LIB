@@ -9,7 +9,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">LGPL</license>
     <projectUrl>https://github.com/kokkiemouse/UST_MUSICXML_LIB</projectUrl>
-    <iconUrl>https://kokkiemouse.github.io/UST_MUSICXML_LIB/icon.png</iconUrl>
+    <iconUrl>https://github.com/kokkiemouse/UST_MUSICXML_LIB/raw/master/icon.png</iconUrl>
     <description>$description$</description>
     <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
     <copyright>Copyright kokkiemouse</copyright>
