@@ -524,6 +524,14 @@ namespace UST_MUSICXML_LIB
                 childeditelement.Add(new XElement("pitch", new XElement("octave", "4")));
                 */
                 childeditelement.Element("pitch").Element("step").Value = "A";
+                try { 
+                    childeditelement.Element("pitch").Add(new XElement("octave","4"));
+                }
+                catch
+                {
+                    //nothing
+                }
+
                 childeditelement.Element("pitch").Element("octave").Value = "4";
 
             }
