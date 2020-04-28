@@ -463,13 +463,6 @@ namespace UST_MUSICXML_LIB
                 select el;
                 foreach (XElement el in address)
                     childeditelement = el;
-                childeditelement.Add(new XElement("pitch", new XElement("step", nkun.pitchStep.ToString())));
-
-                childeditelement.Add(new XElement("octave", nkun.pitchOctave.ToString()), new XElement("alter", pitchalterkun));
-                childeditelement.Add(new XElement("duration", ((int)nkun.duration).ToString()));
-                childeditelement.Add(new XElement("type", nkun.type));
-                childeditelement.Add(new XElement("voice", "1"));
-                childeditelement.Add(new XElement("staff", "1"));
 
 
                 init_one = true;
@@ -477,94 +470,114 @@ namespace UST_MUSICXML_LIB
             else
             {
 
-                childeditelement = new XElement("measure", new XAttribute("number", xelem.Elements("measure").Count() + 1),
-                new XElement("pitch", new XElement("step", nkun.pitchStep.ToString()),
-                new XElement("octave", nkun.pitchOctave.ToString()), new XElement("alter", pitchalterkun)),
-                new XElement("duration", ((int)nkun.duration).ToString()),
-                new XElement("type", nkun.type),
-                new XElement("voice", "1"),
-                new XElement("staff", "1"));
+                childeditelement = new XElement("measure", new XAttribute("number", xelem.Elements("measure").Count() + 1));
             }
-            if (dotnext)
-            {
-                childeditelement.Add(new XElement("dot"));
-                dotnext = false;
-            }
+            XElement childeditelement_n = new XElement("note");
+
+            childeditelement_n.Add(new XElement("pitch", new XElement("step", nkun.pitchStep.ToString())));
+
+            childeditelement_n.Element("pitch").Add(new XElement("alter", pitchalterkun), new XElement("octave", nkun.pitchOctave.ToString()));
+            childeditelement_n.Add(new XElement("duration", ((int)nkun.duration).ToString()));
+
+
             if (tienext)
             {
-                childeditelement.Add(new XElement("tie", new XAttribute("type", "start")));
-                childeditelement.Add(new XElement("notations", new XElement("tied", new XAttribute("type", "start"))));
+                childeditelement_n.Add(new XElement("tie", new XAttribute("type", "start")));
 
-                tienext = false;
-            }
-            if (nkun.dot > 0)
-            childeditelement.Add(new XElement("dot"));
-            if(nkun.dot >= 2)
-            {
-                dotnext = true;
             }
             if (nkun.tie.Equals("inter"))
             {
-                childeditelement.Add(new XElement("tie", new XAttribute("type", "stop")));
-                childeditelement.Add(new XElement("notations",new XElement("tied",new XAttribute("type", "stop"))));
-                tienext = true;
-            }else if (!nkun.tie.Equals(""))
+                childeditelement_n.Add(new XElement("tie", new XAttribute("type", "stop")));    
+            }
+
+            else if (!nkun.tie.Equals(""))
             {
-                childeditelement.Add(new XElement("tie", new XAttribute("type", nkun.tie)));
-                childeditelement.Add(new XElement("notations", new XElement("tied", new XAttribute("type", nkun.tie))));
+                childeditelement_n.Add(new XElement("tie", new XAttribute("type", nkun.tie)));
+            }
+
+            childeditelement_n.Add(new XElement("voice", "1"));
+            childeditelement_n.Add(new XElement("type", nkun.type.Replace("D","")));
+            if (dotnext)
+            {
+                childeditelement_n.Add(new XElement("dot"));
+                dotnext = false;
+            }
+            if (nkun.dot > 0)
+                childeditelement_n.Add(new XElement("dot"));
+            if (nkun.dot >= 2)
+            {
+                dotnext = true;
+            }
+            childeditelement_n.Add(new XElement("staff", "1"));
+
+            if (tienext)
+            {
+                childeditelement_n.Add(new XElement("notations", new XElement("tied", new XAttribute("type", "start"))));
+                tienext = false;
+
+            }
+            if (nkun.tie.Equals("inter"))
+            {
+                childeditelement_n.Add(new XElement("notations", new XElement("tied", new XAttribute("type", "stop"))));
+                tienext = true;
+            }
+            else if (!nkun.tie.Equals(""))
+            {
+                childeditelement_n.Add(new XElement("notations", new XElement("tied", new XAttribute("type", nkun.tie))));
             }
             if (!nkun.lyricText.Equals("R"))
             {
-                childeditelement.Add(new XElement("lyric", new XAttribute("default-y", "-77"),new XElement("text",nkun.lyricText)));
+                childeditelement_n.Add(new XElement("lyric", new XAttribute("default-y", "-77"),new XElement("text",nkun.lyricText)));
             }
             else
             {
-                childeditelement.Add(new XElement("rest"));
+                childeditelement_n.AddFirst(new XElement("rest"));
                 /*childeditelement.Add(new XElement("pitch", new XElement("step", "A")));
                 childeditelement.Add(new XElement("pitch", new XElement("octave", "4")));
                 */
-                childeditelement.Element("pitch").Element("step").Value = "A";
-                try { 
-                    childeditelement.Element("pitch").Add(new XElement("octave","4"));
-                }
-                catch
-                {
-                    //nothing
+                /*
+                childeditelement_n.Element("pitch").Element("step").Value = "A";
+                if (childeditelement_n.Element("pitch").Element("octave").Value.Equals(null)){
+
+                    childeditelement_n.Element("pitch").Add(new XElement("octave", "4"));
                 }
 
-                childeditelement.Element("pitch").Element("octave").Value = "4";
+                childeditelement_n.Element("pitch").Element("octave").Value = "4";
+                */
+                childeditelement_n.SetElementValue("pitch", null);
 
             }
             if (!nkun.time_modification.Equals("0"))
             {
-                childeditelement.Add(new XElement("time-modification"));
-                childeditelement.Element("time-modification").Add(new XElement("actual-notes", "3"));
-                childeditelement.Element("time-modification").Add(new XElement("normal-notes", "2"));
+                childeditelement_n.Add(new XElement("time-modification"));
+                childeditelement_n.Element("time-modification").Add(new XElement("actual-notes", "3"));
+                childeditelement_n.Element("time-modification").Add(new XElement("normal-notes", "2"));
                 if (nkun.time_modification.Equals("begin"))
                 {
-                    childeditelement.Add(new XElement("beam", new XAttribute("number", "1"), "begin"));
-                    if (childeditelement.Element("notations") == null)
+                    childeditelement_n.Add(new XElement("beam", new XAttribute("number", "1"), "begin"));
+                    if (childeditelement_n.Element("notations") == null)
                     {
-                        childeditelement.Add(new XElement("notations"));
+                        childeditelement_n.Add(new XElement("notations"));
                     }
-                    childeditelement.Element("notations").Add(new XElement("tuplet", new XAttribute("type", "start"),new XAttribute("bracket","no")));
-                    childeditelement.Element("notations").Add(new XElement("tuplet"));
+                    childeditelement_n.Element("notations").Add(new XElement("tuplet", new XAttribute("type", "start"),new XAttribute("bracket","no")));
+                    childeditelement_n.Element("notations").Add(new XElement("tuplet"));
                 }else if (nkun.time_modification.Equals("continue"))
                 {
-                    childeditelement.Add(new XElement("beam", new XAttribute("number", "1"), "continue"));
+                    childeditelement_n.Add(new XElement("beam", new XAttribute("number", "1"), "continue"));
 
                 }else if (nkun.time_modification.Equals("end"))
                 {
-                    childeditelement.Add(new XElement("beam", new XAttribute("number", "1"), "end"));
-                    if (childeditelement.Element("notations") == null)
+                    childeditelement_n.Add(new XElement("beam", new XAttribute("number", "1"), "end"));
+                    if (childeditelement_n.Element("notations") == null)
                     {
-                        childeditelement.Add(new XElement("notations"));
+                        childeditelement_n.Add(new XElement("notations"));
                     }
-                    childeditelement.Element("notations").Add(new XElement("tuplet", new XAttribute("type", "stop")));
-                    childeditelement.Element("notations").Add(new XElement("tuplet"));
+                    childeditelement_n.Element("notations").Add(new XElement("tuplet", new XAttribute("type", "stop")));
+                    childeditelement_n.Element("notations").Add(new XElement("tuplet"));
                 }
 
             }
+            childeditelement.Add(childeditelement_n);
             xelem.Add(childeditelement);
 
 
@@ -593,7 +606,9 @@ namespace UST_MUSICXML_LIB
             init_one = false;
             bool tien = false;
             bool doen = false;
-            foreach(notes nkun in Notes)
+            int len = 0;
+            int mseq = 0;
+            foreach (notes nkun in Notes)
             {
                 insertNote(ref score, nkun,ref doen,ref tien);
             }
