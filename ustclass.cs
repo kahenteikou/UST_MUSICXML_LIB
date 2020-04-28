@@ -22,6 +22,7 @@ namespace UST_MUSICXML_LIB
         private int beatType  = 4;    // ○分の..
         private int useTie    = 1;    // 1=音長が小節区切りをまたぐ際等にタイを使う
         private bool init_one = false;
+        private float measurelen;
         private  float[] lengthList = new float[]{1920,    1680  ,   1440,   960  ,   840  ,     720   ,   480   ,  420,
                       360   ,  320    ,  240   , 210  ,   180   ,    160   ,   120   ,  105    ,  90     , 80  ,   60,
                       52.5F  ,  45     ,  30 ,    26.25F ,  22.5F   ,   15    ,   13.125F , 11.25F  ,7.5F };
@@ -156,10 +157,6 @@ namespace UST_MUSICXML_LIB
                     
                 }
             }
-            float measurelen = divisions * beats / (beatType / 4);
-            uniqR(ref Notes);
-            setTie(ref Notes,measurelen);
-            setTuplet(ref Notes);
 
         }
         #region いろいろな合成
@@ -445,34 +442,15 @@ namespace UST_MUSICXML_LIB
         /// <param name="nkun">突っ込むノート君</param>
         /// <param name="dotnext">判定用</param>
         /// <param name="tienext">判定用</param>
-        private void insertNote(ref XElement xelem,notes nkun,ref bool dotnext,ref bool tienext)
+        private XElement insertNote(XElement childeditelement, notes nkun,ref bool dotnext,ref bool tienext)
         {
+            XElement childeditelement_n = childeditelement;
             string pitchalterkun;
             if (nkun.pitchAlter)
             {
                 pitchalterkun = "1";
             }
             else pitchalterkun = "0";
-            XElement childeditelement = new XElement("measure");
-
-            if (init_one == false)
-            {
-                IEnumerable<XElement> address =
-                     from el in xelem.Elements("measure")
-                       where (string)el.Attribute("number") == "1"
-                select el;
-                foreach (XElement el in address)
-                    childeditelement = el;
-
-
-                init_one = true;
-            }
-            else
-            {
-
-                childeditelement = new XElement("measure", new XAttribute("number", xelem.Elements("measure").Count() + 1));
-            }
-            XElement childeditelement_n = new XElement("note");
 
             childeditelement_n.Add(new XElement("pitch", new XElement("step", nkun.pitchStep.ToString())));
 
@@ -577,8 +555,7 @@ namespace UST_MUSICXML_LIB
                 }
 
             }
-            childeditelement.Add(childeditelement_n);
-            xelem.Add(childeditelement);
+            return childeditelement_n;
 
 
 
@@ -596,7 +573,6 @@ namespace UST_MUSICXML_LIB
             XElement enc = xml.Element("score-partwise").Element("identification").Element("encoding");
             enc.Element("encoding-date").Value = DateTime.Now.ToString("yyyy-MM-dd");
             enc.Element("software").Value = APPNAME;
-            float measurelen = divisions * beats / (beatType / 4);
             XElement measure = xml.Element("score-partwise").Element("part").Element("measure");
             measure.Element("direction").Element("sound").Attribute("tempo").Value = ((int)tempo).ToString();
             measure.Element("attributes").Element("divisions").Value = divisions.ToString();
@@ -606,13 +582,29 @@ namespace UST_MUSICXML_LIB
             init_one = false;
             bool tien = false;
             bool doen = false;
-            int len = 0;
+            float len = 0;
             int mseq = 0;
+            bool addkun = true;
+            measurelen = (divisions * beats) / (beatType / 4);
+            uniqR(ref Notes);
+            setTie(ref Notes, measurelen);
+            setTuplet(ref Notes);
             foreach (notes nkun in Notes)
             {
-                insertNote(ref score, nkun,ref doen,ref tien);
+                XElement editkun = new XElement("note");
+                editkun = score.Element("measure");
+                len = len + nkun.duration;
+                score.Elements("measure").Last().Add(new XElement( insertNote(new XElement("note"), nkun,ref doen,ref tien)));
+                if(len >= measurelen)
+                {
+                    mseq++;
+                    addkun = true;
+                    score.Add(new XElement("measure",new XAttribute("number",mseq +1)));
+                    len = len - measurelen;
+                }
             }
             xml.Save(stream);
+            System.Console.Write("");
 
         }
     }
