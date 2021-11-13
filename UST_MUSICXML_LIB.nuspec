@@ -8,7 +8,7 @@
     <owners>$author$</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">LGPL-2.1-or-later</license>
-    <projectUrl>https://github.com/kokkiemouse/UST_MUSICXML_LIB</projectUrl>
+    <projectUrl>https://github.com/kahenteikou/UST_MUSICXML_LIB</projectUrl>
     <iconUrl>https://github.com/kokkiemouse/UST_MUSICXML_LIB/raw/master/icon.png</iconUrl>
     <description>$description$</description>
     <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
