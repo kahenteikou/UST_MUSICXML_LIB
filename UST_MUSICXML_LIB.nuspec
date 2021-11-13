@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package >
   <metadata>
-    <id>UST_MUSICXML_LIB</id>
+    <id>$id$</id>
     <version>2.0.0</version>
-    <title>UST_MUSICXML_LIB</title>
-    <authors>kahenteikou</authors>
-    <owners>kahenteikou</owners>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">LGPL-2.1-or-later</license>
-    <projectUrl>https://github.com/kahenteikou/UST_MUSICXML_LIB</projectUrl>
-    <iconUrl>https://github.com/kahenteikou/UST_MUSICXML_LIB/raw/master/icon.png</iconUrl>
-    <description>ustファイルをmusicxmlにするやつ。</description>
+    <projectUrl>https://github.com/kokkiemouse/UST_MUSICXML_LIB</projectUrl>
+    <iconUrl>https://github.com/kokkiemouse/UST_MUSICXML_LIB/raw/master/icon.png</iconUrl>
+    <description>$description$</description>
     <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
-    <copyright>Copyright kahenteikou</copyright>
+    <copyright>Copyright kokkiemouse</copyright>
     <tags>UTAU MUSICXML</tags>
   </metadata>
 </package>
