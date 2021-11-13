@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Version>2.0.0.0</Version>
+    <Version>2.0.0.1</Version>
     <Company>kahenteikou</Company>
     <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
